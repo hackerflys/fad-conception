@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/design/fad_colors.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../l10n/l10n_ext.dart';
 
 class AppShell extends StatelessWidget {
@@ -88,8 +89,8 @@ class _NavItem extends StatelessWidget {
     required this.onTap,
   });
 
-  final IconData icon;
-  final IconData activeIcon;
+  final String icon;
+  final String activeIcon;
   final String label;
   final bool selected;
   final VoidCallback onTap;
@@ -111,10 +112,10 @@ class _NavItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            DuoIcon(
               selected ? activeIcon : icon,
               size: 24,
-              color: selected ? c.onPrimary : c.textLow,
+              color: selected ? c.onPrimary : null,
             ),
             if (selected) ...[
               const SizedBox(width: 8),

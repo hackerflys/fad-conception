@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/data/demo_data.dart';
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/fad_button.dart';
@@ -33,7 +34,7 @@ class LearnScreen extends ConsumerWidget {
               glow: true,
               strong: true,
               child: Row(children: [
-                Icon(FadIcons.trophy, color: c.accent, size: 28),
+                DuoIcon(FadIcons.trophy, color: c.accent, size: 28),
                 const SizedBox(width: FadGap.sm),
                 Expanded(child: Text(l.learnFullPathsSoon, style: t.titleMedium)),
                 FadButton(
@@ -54,7 +55,7 @@ class LearnScreen extends ConsumerWidget {
                     Container(
                       width: 46, height: 46,
                       decoration: BoxDecoration(borderRadius: FadRadius.rSm, color: c.primary.withValues(alpha: 0.14)),
-                      child: Icon(FadIcons.lesson, color: c.accent),
+                      child: DuoIcon(FadIcons.lesson, color: c.accent),
                     ),
                     const SizedBox(width: FadGap.sm),
                     Expanded(
@@ -63,7 +64,7 @@ class LearnScreen extends ConsumerWidget {
                         Text('${lesson.durationLabel} · ${lesson.level}', style: t.bodySmall),
                       ]),
                     ),
-                    Icon(FadIcons.play, color: c.accent, size: 26),
+                    DuoIcon(FadIcons.play, color: c.accent, size: 26),
                   ]),
                 ),
               ),
@@ -81,7 +82,7 @@ class LearnScreen extends ConsumerWidget {
                     child: GlassPanel(
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Row(children: [
-                          Icon(FadIcons.series, color: c.violet),
+                          DuoIcon(FadIcons.series, color: c.violet),
                           const Spacer(),
                           Text('${s.episodes} ép.', style: t.labelSmall),
                         ]),
@@ -111,10 +112,10 @@ class LearnScreen extends ConsumerWidget {
             GlassPanel(
               onTap: () {},
               child: Row(children: [
-                Icon(FadIcons.glossary, color: c.accent),
+                DuoIcon(FadIcons.glossary, color: c.accent),
                 const SizedBox(width: FadGap.sm),
                 Expanded(child: Text('API · SDK · RLS · LLM · CI/CD …', style: t.bodyLarge)),
-                Icon(FadIcons.forward, color: c.textLow),
+                DuoIcon(FadIcons.forward, color: c.textLow),
               ]),
             ),
           ],

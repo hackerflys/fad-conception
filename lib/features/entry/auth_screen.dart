@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../core/design/fad_colors.dart';
+import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/state/app_settings.dart';
 import '../../core/widgets/atom_background.dart';
@@ -44,13 +44,13 @@ class AuthScreen extends ConsumerWidget {
                 const Spacer(),
                 FadButton(
                   label: l.authGoogle,
-                  icon: PhosphorIconsBold.googleLogo,
+                  icon: FadIcons.globe,
                   onPressed: () => _enter(context, ref),
                 ),
                 const SizedBox(height: FadGap.sm),
                 FadButton(
                   label: l.authEmail,
-                  icon: PhosphorIconsDuotone.envelopeSimple,
+                  icon: FadIcons.mail,
                   kind: FadButtonKind.soft,
                   onPressed: () => _enter(context, ref),
                 ),

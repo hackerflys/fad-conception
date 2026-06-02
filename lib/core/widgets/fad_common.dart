@@ -4,6 +4,7 @@ import '../design/fad_colors.dart';
 import '../design/fad_icons.dart';
 import '../design/fad_tokens.dart';
 import 'atom_background.dart';
+import 'duo_icon.dart';
 
 /// Immersive scaffold: atom backdrop behind a transparent Scaffold.
 class FadScaffold extends StatelessWidget {
@@ -47,7 +48,7 @@ class FadIconButton extends StatelessWidget {
     this.tooltip,
   });
 
-  final IconData icon;
+  final String icon;
   final VoidCallback? onTap;
   final int badge;
   final String? tooltip;
@@ -68,7 +69,7 @@ class FadIconButton extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Icon(icon, size: 22, color: c.textHigh),
+            DuoIcon(icon, size: 22),
             if (badge > 0)
               Positioned(
                 top: 8,
@@ -132,7 +133,7 @@ class FadChip extends StatelessWidget {
   });
 
   final String label;
-  final IconData? icon;
+  final String? icon;
   final bool selected;
   final VoidCallback? onTap;
 
@@ -154,7 +155,7 @@ class FadChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 16, color: selected ? c.onPrimary : c.textMid),
+              DuoIcon(icon!, size: 16, color: selected ? c.onPrimary : null),
               const SizedBox(width: 6),
             ],
             Text(
@@ -176,7 +177,7 @@ class FadBadge extends StatelessWidget {
   const FadBadge({super.key, required this.label, this.icon = FadIcons.checkCircle, this.color});
 
   final String label;
-  final IconData icon;
+  final String icon;
   final Color? color;
 
   @override
@@ -193,7 +194,7 @@ class FadBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 13, color: col),
+          DuoIcon(icon, size: 13, color: col),
           const SizedBox(width: 5),
           Text(label, style: Theme.of(context).textTheme.labelSmall?.copyWith(color: col, fontWeight: FontWeight.w700)),
         ],

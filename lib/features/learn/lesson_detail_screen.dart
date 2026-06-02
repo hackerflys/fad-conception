@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/data/demo_data.dart';
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/fad_button.dart';
@@ -63,7 +64,7 @@ class LessonDetailScreen extends ConsumerWidget {
                     glow: true,
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Row(children: [
-                        Icon(FadIcons.sparkle, color: c.accent, size: 18),
+                        DuoIcon(FadIcons.sparkle, color: c.accent, size: 18),
                         const SizedBox(width: 6),
                         Text(l.lessonKeyTakeaway, style: t.titleSmall),
                       ]),

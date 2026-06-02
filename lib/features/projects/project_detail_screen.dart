@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/data/demo_data.dart';
 import '../../core/data/models.dart';
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/fad_button.dart';
@@ -42,7 +43,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                     Container(
                       width: 64, height: 64,
                       decoration: BoxDecoration(borderRadius: FadRadius.rMd, gradient: c.brandGradient),
-                      child: Icon(p.category.icon, color: c.onPrimary, size: 30),
+                      child: DuoIcon(p.category.icon, color: c.onPrimary, size: 30),
                     ),
                     const SizedBox(width: FadGap.md),
                     Expanded(
@@ -57,7 +58,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                   SectionHeader(title: l.signalProof),
                   GlassPanel(
                     child: Row(children: [
-                      Icon(FadIcons.proof, color: c.accent),
+                      DuoIcon(FadIcons.proof, color: c.accent),
                       const SizedBox(width: FadGap.sm),
                       Expanded(child: Text('Démo + dépôt vérifié', style: t.bodyLarge)),
                     ]),

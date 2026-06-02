@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/data/demo_data.dart';
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/fad_common.dart';
@@ -48,7 +49,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       border: Border.all(color: c.surfaceBorder),
                     ),
                     child: Row(children: [
-                      Icon(FadIcons.search, size: 20, color: c.textLow),
+                      DuoIcon(FadIcons.search, size: 20, color: c.textLow),
                       const SizedBox(width: FadGap.xs),
                       Expanded(
                         child: TextField(

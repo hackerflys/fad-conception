@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models.dart';
 import '../../../core/design/fad_colors.dart';
+import '../../../core/widgets/duo_icon.dart';
 import '../../../core/design/fad_icons.dart';
 import '../../../core/design/fad_tokens.dart';
 import '../../../core/widgets/glass_panel.dart';
@@ -33,13 +34,13 @@ class SignalCard extends StatelessWidget {
                   borderRadius: FadRadius.rSm,
                   color: c.primary.withValues(alpha: 0.14),
                 ),
-                child: Icon(signal.category.icon, size: 18, color: c.accent),
+                child: DuoIcon(signal.category.icon, size: 18, color: c.accent),
               ),
               const SizedBox(width: FadGap.xs),
               Text(signal.category.label.toUpperCase(),
                   style: t.labelSmall?.copyWith(color: c.textMid, letterSpacing: 1)),
               const Spacer(),
-              Icon(FadIcons.localScore, size: 14, color: c.success),
+              DuoIcon(FadIcons.localScore, size: 14, color: c.success),
               const SizedBox(width: 3),
               Text('${signal.localScore}', style: t.labelMedium?.copyWith(color: c.success)),
             ],
@@ -57,16 +58,16 @@ class SignalCard extends StatelessWidget {
           const SizedBox(height: FadGap.sm),
           Row(
             children: [
-              Icon(FadIcons.bookmark, size: 16, color: c.textLow),
+              DuoIcon(FadIcons.bookmark, size: 16, color: c.textLow),
               const SizedBox(width: 4),
               Text('${signal.savedCount}', style: t.labelSmall),
               const SizedBox(width: FadGap.md),
-              Icon(FadIcons.comment, size: 16, color: c.textLow),
+              DuoIcon(FadIcons.comment, size: 16, color: c.textLow),
               const SizedBox(width: 4),
               Text('${signal.commentCount}', style: t.labelSmall),
               const Spacer(),
               if (signal.verified)
-                Icon(FadIcons.proof, size: 18, color: c.accent),
+                DuoIcon(FadIcons.proof, size: 18, color: c.accent),
             ],
           ),
         ],

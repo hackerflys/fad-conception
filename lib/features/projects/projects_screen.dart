@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/data/demo_data.dart';
 import '../../core/data/models.dart';
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/fad_common.dart';
@@ -26,7 +27,7 @@ class ProjectsScreen extends ConsumerWidget {
         onPressed: () => context.push('/projects/submit'),
         backgroundColor: c.primary,
         foregroundColor: c.onPrimary,
-        icon: const Icon(FadIcons.plus),
+        icon: DuoIcon(FadIcons.plus, size: 20, color: c.onPrimary),
         label: Text(l.projectsSubmit, style: t.labelLarge?.copyWith(color: c.onPrimary)),
       ),
       body: SafeArea(
@@ -69,7 +70,7 @@ class _ProjectCard extends StatelessWidget {
           Container(
             width: 48, height: 48,
             decoration: BoxDecoration(borderRadius: FadRadius.rSm, gradient: c.brandGradient),
-            child: Icon(p.category.icon, color: c.onPrimary),
+            child: DuoIcon(p.category.icon, color: c.onPrimary),
           ),
           const SizedBox(width: FadGap.sm),
           Expanded(

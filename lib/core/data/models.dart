@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 import '../design/fad_icons.dart';
 
 /// Lightweight immutable domain models for the MVP. The store layer is in-memory
@@ -18,7 +16,7 @@ extension SignalCategoryX on SignalCategory {
         SignalCategory.africa => 'Afrique Tech',
       };
 
-  IconData get icon => switch (this) {
+  String get icon => switch (this) {
         SignalCategory.ai => FadIcons.ai,
         SignalCategory.dev => FadIcons.code,
         SignalCategory.cyber => FadIcons.cyber,

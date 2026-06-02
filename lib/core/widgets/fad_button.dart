@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../design/fad_colors.dart';
 import '../design/fad_tokens.dart';
+import 'duo_icon.dart';
 
 enum FadButtonKind { primary, ghost, soft }
 
@@ -20,7 +21,7 @@ class FadButton extends StatelessWidget {
 
   final String label;
   final VoidCallback? onPressed;
-  final IconData? icon;
+  final String? icon;
   final FadButtonKind kind;
   final bool expand;
   final bool loading;
@@ -46,7 +47,10 @@ class FadButton extends StatelessWidget {
             ),
           )
         else ...[
-          if (icon != null) ...[Icon(icon, size: 20), const SizedBox(width: FadGap.xs)],
+          if (icon != null) ...[
+            DuoIcon(icon!, size: 20, color: kind == FadButtonKind.primary ? c.onPrimary : c.primary),
+            const SizedBox(width: FadGap.xs),
+          ],
           Flexible(
             child: Text(
               label,

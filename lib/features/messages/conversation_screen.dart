@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/data/demo_data.dart';
 import '../../core/data/models.dart';
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/fad_common.dart';
@@ -134,7 +135,7 @@ class _Bubble extends StatelessWidget {
             style: t.bodyLarge?.copyWith(color: me ? c.onPrimary : c.textHigh));
       case MsgKind.voice:
         content = Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(FadIcons.play, size: 26, color: me ? c.onPrimary : c.accent),
+          DuoIcon(FadIcons.play, size: 26, color: me ? c.onPrimary : c.accent),
           const SizedBox(width: 8),
           Container(width: 90, height: 3, color: (me ? c.onPrimary : c.textMid).withValues(alpha: 0.5)),
           const SizedBox(width: 8),
@@ -142,14 +143,14 @@ class _Bubble extends StatelessWidget {
         ]);
       case MsgKind.photo:
         content = Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(FadIcons.camera, size: 20, color: me ? c.onPrimary : c.accent),
+          DuoIcon(FadIcons.camera, size: 20, color: me ? c.onPrimary : c.accent),
           const SizedBox(width: 8),
           Text(msg.text.isEmpty ? 'Photo' : msg.text,
               style: t.bodyLarge?.copyWith(color: me ? c.onPrimary : c.textHigh)),
         ]);
       case MsgKind.video:
         content = Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(FadIcons.video, size: 20, color: me ? c.onPrimary : c.accent),
+          DuoIcon(FadIcons.video, size: 20, color: me ? c.onPrimary : c.accent),
           const SizedBox(width: 8),
           Text('Vidéo · ${msg.durationLabel ?? ''}',
               style: t.bodyLarge?.copyWith(color: me ? c.onPrimary : c.textHigh)),
@@ -237,7 +238,7 @@ class _Composer extends StatelessWidget {
             width: 50, height: 50,
             decoration: BoxDecoration(shape: BoxShape.circle, gradient: c.brandGradient,
                 boxShadow: [BoxShadow(color: c.glow, blurRadius: 18, spreadRadius: -4)]),
-            child: Icon(composing ? FadIcons.send : FadIcons.mic, color: c.onPrimary),
+            child: DuoIcon(composing ? FadIcons.send : FadIcons.mic, color: c.onPrimary),
           ),
         ),
       ]),
@@ -247,14 +248,14 @@ class _Composer extends StatelessWidget {
 
 class _MiniBtn extends StatelessWidget {
   const _MiniBtn({required this.icon, required this.onTap});
-  final IconData icon;
+  final String icon;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: onTap,
-      icon: Icon(icon, color: context.fad.textMid, size: 22),
+      icon: DuoIcon(icon, color: context.fad.textMid, size: 22),
       visualDensity: VisualDensity.compact,
     );
   }

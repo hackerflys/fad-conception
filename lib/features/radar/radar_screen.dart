@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/data/demo_data.dart';
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/fad_common.dart';
@@ -59,7 +60,7 @@ class _RadarScreenState extends ConsumerState<RadarScreen> {
                   padding: const EdgeInsets.only(top: FadGap.lg, bottom: FadGap.sm),
                   child: Row(
                     children: [
-                      Icon(FadIcons.sparkle, size: 18, color: c.accent),
+                      DuoIcon(FadIcons.sparkle, size: 18, color: c.accent),
                       const SizedBox(width: 6),
                       Text(l.radarSignalOfDay, style: Theme.of(context).textTheme.titleMedium),
                     ],

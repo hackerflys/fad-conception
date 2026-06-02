@@ -6,6 +6,7 @@ import '../../core/design/fad_colors.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/atom_background.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/widgets/fad_button.dart';
 import '../../l10n/l10n_ext.dart';
 
@@ -72,7 +73,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                               gradient: c.brandGradient,
                               boxShadow: [BoxShadow(color: c.glow, blurRadius: 50, spreadRadius: -8)],
                             ),
-                            child: Icon(s.$1, size: 60, color: c.onPrimary),
+                            child: DuoIcon(s.$1, size: 60, color: c.onPrimary),
                           ),
                           const SizedBox(height: FadGap.xxl),
                           Text(s.$2,

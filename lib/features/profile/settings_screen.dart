@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/state/app_settings.dart';
@@ -43,7 +44,7 @@ class SettingsScreen extends ConsumerWidget {
             SectionHeader(title: l.settingsAppearance),
             GlassPanel(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [Icon(FadIcons.sun, color: c.accent, size: 18), const SizedBox(width: 8), Text(l.settingsTheme, style: t.titleSmall)]),
+                Row(children: [DuoIcon(FadIcons.sun, color: c.accent, size: 18), const SizedBox(width: 8), Text(l.settingsTheme, style: t.titleSmall)]),
                 const SizedBox(height: FadGap.sm),
                 Row(children: [
                   for (final o in themeOptions)
@@ -62,7 +63,7 @@ class SettingsScreen extends ConsumerWidget {
                               border: Border.all(color: c.surfaceBorder),
                             ),
                             child: Column(children: [
-                              Icon(o.$2, color: s.themeMode == o.$1 ? c.onPrimary : c.textMid, size: 22),
+                              DuoIcon(o.$2, color: s.themeMode == o.$1 ? c.onPrimary : c.textMid, size: 22),
                               const SizedBox(height: 4),
                               Text(o.$3,
                                   style: t.labelSmall?.copyWith(
@@ -78,7 +79,7 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: FadGap.sm),
             GlassPanel(
               child: Row(children: [
-                Icon(FadIcons.globe, color: c.accent),
+                DuoIcon(FadIcons.globe, color: c.accent),
                 const SizedBox(width: FadGap.sm),
                 Expanded(child: Text(l.settingsLanguage, style: t.titleMedium)),
                 _LangToggle(
@@ -95,7 +96,7 @@ class SettingsScreen extends ConsumerWidget {
                   value: s.dataSaver,
                   onChanged: ctrl.setDataSaver,
                   activeThumbColor: c.accent,
-                  secondary: Icon(FadIcons.dataSaver, color: c.accent),
+                  secondary: DuoIcon(FadIcons.dataSaver, color: c.accent),
                   title: Text(l.settingsDataSaver, style: t.titleMedium),
                 ),
                 Divider(color: c.surfaceBorder, height: 1),
@@ -104,7 +105,7 @@ class SettingsScreen extends ConsumerWidget {
                   value: s.offlineReading,
                   onChanged: ctrl.setOfflineReading,
                   activeThumbColor: c.accent,
-                  secondary: Icon(FadIcons.offline, color: c.accent),
+                  secondary: DuoIcon(FadIcons.offline, color: c.accent),
                   title: Text(l.settingsOffline, style: t.titleMedium),
                 ),
               ]),
@@ -112,7 +113,7 @@ class SettingsScreen extends ConsumerWidget {
             SectionHeader(title: l.settingsAbout),
             GlassPanel(
               child: Row(children: [
-                Icon(FadIcons.about, color: c.accent),
+                DuoIcon(FadIcons.about, color: c.accent),
                 const SizedBox(width: FadGap.sm),
                 Expanded(child: Text('FAD Conception · v1.0.0', style: t.bodyLarge)),
               ]),

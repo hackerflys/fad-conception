@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/design/fad_colors.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/widgets/fad_button.dart';
 import '../../core/widgets/fad_common.dart';
 import '../../core/widgets/glass_panel.dart';
@@ -17,7 +18,7 @@ class SubmitProjectScreen extends StatelessWidget {
     final l = context.l10n;
     final t = Theme.of(context).textTheme;
 
-    Widget field(String label, {int lines = 1, IconData? icon}) => Padding(
+    Widget field(String label, {int lines = 1, String? icon}) => Padding(
           padding: const EdgeInsets.only(bottom: FadGap.sm),
           child: GlassPanel(
             padding: const EdgeInsets.symmetric(horizontal: FadGap.md, vertical: 4),
@@ -27,7 +28,7 @@ class SubmitProjectScreen extends StatelessWidget {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 labelText: label,
-                icon: icon == null ? null : Icon(icon, color: context.fad.textLow),
+                icon: icon == null ? null : DuoIcon(icon, color: context.fad.textLow),
               ),
             ),
           ),

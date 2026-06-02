@@ -11,7 +11,7 @@ import '../../core/widgets/fad_button.dart';
 import '../../core/widgets/fad_common.dart';
 import '../../l10n/l10n_ext.dart';
 
-const _interests = <(String, String, IconData)>[
+const _interests = <(String, String, String)>[
   ('ai', 'IA', FadIcons.ai),
   ('dev', 'Développement', FadIcons.code),
   ('cyber', 'Cybersécurité', FadIcons.cyber),

@@ -20,6 +20,7 @@ dependencies:
 
   # Design system
   phosphor_flutter: ^2.1.0
+  flutter_svg: ^2.0.10+1
 
   # Storage & i18n
   shared_preferences: ^2.3.4
@@ -37,6 +38,7 @@ flutter:
   assets:
     - assets/brand/
     - assets/icons/
+    - assets/icons/duo/
 
   fonts:
     - family: SpaceGrotesk

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/data/demo_data.dart';
 import '../../core/data/models.dart';
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/fad_button.dart';
@@ -50,7 +51,7 @@ class SignalDetailScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(borderRadius: FadRadius.rSm, gradient: c.brandGradient),
-                child: Icon(signal.category.icon, color: c.onPrimary, size: 20),
+                child: DuoIcon(signal.category.icon, color: c.onPrimary, size: 20),
               ),
               const SizedBox(width: FadGap.sm),
               Text(signal.category.label, style: t.titleMedium),
@@ -85,7 +86,7 @@ class SignalDetailScreen extends ConsumerWidget {
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                           borderRadius: FadRadius.rSm, color: c.violet.withValues(alpha: 0.16)),
-                      child: Icon(FadIcons.lesson, color: c.violet),
+                      child: DuoIcon(FadIcons.lesson, color: c.violet),
                     ),
                     const SizedBox(width: FadGap.sm),
                     Expanded(
@@ -94,7 +95,7 @@ class SignalDetailScreen extends ConsumerWidget {
                         Text('${lesson.durationLabel} · ${lesson.level}', style: t.bodySmall),
                       ]),
                     ),
-                    Icon(FadIcons.forward, color: c.textLow),
+                    DuoIcon(FadIcons.forward, color: c.textLow),
                   ]),
                 );
               }),
@@ -132,7 +133,7 @@ class SignalDetailScreen extends ConsumerWidget {
 
 class _Block extends StatelessWidget {
   const _Block({required this.icon, required this.title, required this.body, this.accent = false});
-  final IconData icon;
+  final String icon;
   final String title;
   final String body;
   final bool accent;
@@ -147,7 +148,7 @@ class _Block extends StatelessWidget {
         glow: accent,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Icon(icon, size: 18, color: accent ? c.accent : c.primary),
+            DuoIcon(icon, size: 18, color: accent ? c.accent : c.primary),
             const SizedBox(width: 8),
             Text(title, style: t.titleSmall?.copyWith(color: c.textHigh)),
           ]),
@@ -162,14 +163,14 @@ class _Block extends StatelessWidget {
 class _Trust extends StatelessWidget {
   const _Trust({required this.on, required this.icon, required this.label});
   final bool on;
-  final IconData icon;
+  final String icon;
   final String label;
 
   @override
   Widget build(BuildContext context) {
     final c = context.fad;
     return Column(children: [
-      Icon(icon, color: on ? c.success : c.textLow, size: 24),
+      DuoIcon(icon, color: on ? c.success : c.textLow, size: 24),
       const SizedBox(height: 6),
       Text(label,
           textAlign: TextAlign.center,

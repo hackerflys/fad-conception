@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/design/fad_colors.dart';
+import '../../core/widgets/duo_icon.dart';
 import '../../core/design/fad_icons.dart';
 import '../../core/design/fad_tokens.dart';
 import '../../core/widgets/fad_common.dart';
@@ -25,14 +26,14 @@ class ProfileScreen extends ConsumerWidget {
           ]),
         );
 
-    Widget tile(IconData icon, String label, {VoidCallback? onTap}) => GlassPanel(
+    Widget tile(String icon, String label, {VoidCallback? onTap}) => GlassPanel(
           onTap: onTap ?? () {},
           padding: const EdgeInsets.symmetric(horizontal: FadGap.md, vertical: FadGap.sm),
           child: Row(children: [
-            Icon(icon, color: c.accent, size: 22),
+            DuoIcon(icon, color: c.accent, size: 22),
             const SizedBox(width: FadGap.sm),
             Expanded(child: Text(label, style: t.titleMedium)),
-            Icon(FadIcons.forward, color: c.textLow, size: 18),
+            DuoIcon(FadIcons.forward, color: c.textLow, size: 18),
           ]),
         );
 
@@ -54,7 +55,7 @@ class ProfileScreen extends ConsumerWidget {
                   Container(
                     width: 64, height: 64,
                     decoration: BoxDecoration(shape: BoxShape.circle, gradient: c.brandGradient),
-                    child: Icon(FadIcons.profileFill, color: c.onPrimary, size: 34),
+                    child: DuoIcon(FadIcons.profileFill, color: c.onPrimary, size: 34),
                   ),
                   const SizedBox(width: FadGap.md),
                   Expanded(
