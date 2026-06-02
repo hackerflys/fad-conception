@@ -90,22 +90,24 @@ class FadButton extends StatelessWidget {
 
     return Opacity(
       opacity: disabled && !loading ? 0.5 : 1,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: disabled ? null : onPressed,
-          borderRadius: FadRadius.rPill,
-          child: Ink(
-            decoration: deco,
-            child: IconTheme(
-              data: IconThemeData(
-                color: kind == FadButtonKind.primary ? c.onPrimary : c.primary,
-              ),
-              child: Container(
-                constraints: const BoxConstraints(minHeight: 54),
-                padding: const EdgeInsets.symmetric(horizontal: FadGap.xl),
-                alignment: Alignment.center,
-                child: content,
+      child: SizedBox(
+        height: 54,
+        width: expand ? double.infinity : null,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: disabled ? null : onPressed,
+            borderRadius: FadRadius.rPill,
+            child: Ink(
+              decoration: deco,
+              child: IconTheme(
+                data: IconThemeData(
+                  color: kind == FadButtonKind.primary ? c.onPrimary : c.primary,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: FadGap.xl),
+                  child: content,
+                ),
               ),
             ),
           ),
