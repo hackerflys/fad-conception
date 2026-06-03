@@ -46,20 +46,26 @@ class FadScaffold extends StatelessWidget {
         body: Stack(
           children: [
             body,
-            if (topSmoke && appBar == null)
+            if (topSmoke)
               Positioned(
                 top: 0,
                 left: 0,
                 right: 0,
-                height: topInset + 64,
+                height: topInset + (appBar == null ? 56 : kToolbarHeight + 28),
                 child: IgnorePointer(
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [c.bgBase, c.bgBase.withValues(alpha: 0)],
-                        stops: const [0.4, 1],
+                        // Subtle: fully opaque only at the status bar, then a
+                        // soft veil that still lets content peek through.
+                        colors: [
+                          c.bgBase.withValues(alpha: 0.82),
+                          c.bgBase.withValues(alpha: 0.4),
+                          c.bgBase.withValues(alpha: 0),
+                        ],
+                        stops: const [0, 0.55, 1],
                       ),
                     ),
                   ),

@@ -125,6 +125,8 @@ class Project {
 
 enum MsgKind { text, voice, photo, video }
 
+enum MsgStatus { sent, delivered, read }
+
 class ChatMessage {
   const ChatMessage({
     required this.id,
@@ -133,6 +135,8 @@ class ChatMessage {
     required this.time,
     this.text = '',
     this.durationLabel,
+    this.status = MsgStatus.read,
+    this.reaction,
   });
 
   final String id;
@@ -141,6 +145,21 @@ class ChatMessage {
   final String time;
   final String text;
   final String? durationLabel; // voice / video length
+  final MsgStatus status;
+  final String? reaction; // single emoji reaction
+
+  ChatMessage copyWith({MsgStatus? status, String? reaction, bool clearReaction = false}) {
+    return ChatMessage(
+      id: id,
+      kind: kind,
+      fromMe: fromMe,
+      time: time,
+      text: text,
+      durationLabel: durationLabel,
+      status: status ?? this.status,
+      reaction: clearReaction ? null : (reaction ?? this.reaction),
+    );
+  }
 }
 
 class Conversation {

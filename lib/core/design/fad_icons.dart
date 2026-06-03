@@ -57,6 +57,15 @@ class FadIcons {
   // Engagement
   static const String like = 'like';
 
+  // Messaging controls / message options
+  static const String pause = 'pause';
+  static const String playFill = 'playfill';
+  static const String trash = 'trash';
+  static const String reply = 'reply';
+  static const String forwardMsg = 'forward2';
+  static const String edit = 'edit';
+  static const String archive = 'archive';
+
   // Messaging composer
   static const String mic = 'mic2';
   static const String camera = 'camera';

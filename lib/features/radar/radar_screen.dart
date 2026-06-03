@@ -49,8 +49,12 @@ class _RadarScreenState extends ConsumerState<RadarScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [c.bgBase, c.bgBase.withValues(alpha: 0)],
-                  stops: const [0.45, 1],
+                  colors: [
+                    c.bgBase.withValues(alpha: 0.82),
+                    c.bgBase.withValues(alpha: 0.4),
+                    c.bgBase.withValues(alpha: 0),
+                  ],
+                  stops: const [0, 0.55, 1],
                 ),
               ),
             ),

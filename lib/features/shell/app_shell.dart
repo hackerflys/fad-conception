@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +29,7 @@ class AppShell extends StatelessWidget {
             left: 0,
             right: 0,
             bottom: 0,
-            height: 150,
+            height: 130,
             child: IgnorePointer(
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -36,10 +38,10 @@ class AppShell extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     colors: [
                       c.bgBase.withValues(alpha: 0),
-                      c.bgBase.withValues(alpha: 0.6),
-                      c.bgBase.withValues(alpha: 0.95),
+                      c.bgBase.withValues(alpha: 0.28),
+                      c.bgBase.withValues(alpha: 0.66),
                     ],
-                    stops: const [0, 0.55, 1],
+                    stops: const [0, 0.6, 1],
                   ),
                 ),
               ),
@@ -76,18 +78,23 @@ class _FadBottomNav extends StatelessWidget {
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(FadGap.xl, 0, FadGap.xl, FadGap.xs),
-        child: Container(
+        child: ClipRRect(
+          borderRadius: FadRadius.rPill,
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+            child: Container(
           height: 56,
           padding: const EdgeInsets.symmetric(horizontal: 6),
           decoration: BoxDecoration(
             borderRadius: FadRadius.rPill,
-            color: c.isDark ? const Color(0xFF0C1E38) : Colors.white,
+            // Translucent so scrolled content faintly shows through the glass.
+            color: c.isDark ? const Color(0xFF0A1A30).withValues(alpha: 0.55) : Colors.white.withValues(alpha: 0.62),
             border: Border.all(color: c.surfaceBorder),
             boxShadow: [
               BoxShadow(
-                color: c.isDark ? Colors.black.withValues(alpha: 0.5) : const Color(0xFF0D2A55).withValues(alpha: 0.14),
-                blurRadius: 26,
-                offset: const Offset(0, 10),
+                color: c.isDark ? Colors.black.withValues(alpha: 0.35) : const Color(0xFF0D2A55).withValues(alpha: 0.10),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
@@ -103,6 +110,8 @@ class _FadBottomNav extends StatelessWidget {
                   ),
                 ),
             ],
+          ),
+            ),
           ),
         ),
       ),
