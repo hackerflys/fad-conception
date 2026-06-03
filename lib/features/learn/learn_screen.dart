@@ -78,7 +78,7 @@ class LearnScreen extends ConsumerWidget {
                 itemBuilder: (_, i) {
                   final s = series[i];
                   return SizedBox(
-                    width: 230,
+                    width: MediaQuery.sizeOf(context).width * 0.74,
                     child: GlassPanel(
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Row(children: [

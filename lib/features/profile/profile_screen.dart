@@ -52,10 +52,31 @@ class ProfileScreen extends ConsumerWidget {
               glow: true,
               child: Column(children: [
                 Row(children: [
-                  Container(
-                    width: 64, height: 64,
-                    decoration: BoxDecoration(shape: BoxShape.circle, gradient: c.brandGradient),
-                    child: DuoIcon(FadIcons.profileFill, color: c.onPrimary, size: 34),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          width: 64, height: 64,
+                          decoration: BoxDecoration(shape: BoxShape.circle, gradient: c.brandGradient),
+                          child: DuoIcon(FadIcons.profileFill, color: c.onPrimary, size: 34),
+                        ),
+                        Positioned(
+                          right: -2,
+                          bottom: -2,
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: c.bgBase,
+                              border: Border.all(color: c.surfaceBorder),
+                            ),
+                            child: DuoIcon(FadIcons.camera, size: 14, color: c.textHigh),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(width: FadGap.md),
                   Expanded(

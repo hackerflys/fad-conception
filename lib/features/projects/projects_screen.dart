@@ -23,12 +23,15 @@ class ProjectsScreen extends ConsumerWidget {
     final projects = ref.watch(projectsProvider);
 
     return FadScaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/projects/submit'),
-        backgroundColor: c.primary,
-        foregroundColor: c.onPrimary,
-        icon: DuoIcon(FadIcons.plus, size: 20, color: c.onPrimary),
-        label: Text(l.projectsSubmit, style: t.labelLarge?.copyWith(color: c.onPrimary)),
+      floatingActionButton: Transform.translate(
+        offset: const Offset(0, -68),
+        child: FloatingActionButton.extended(
+          onPressed: () => context.push('/projects/submit'),
+          backgroundColor: c.primary,
+          foregroundColor: c.onPrimary,
+          icon: DuoIcon(FadIcons.plus, size: 20, color: c.onPrimary),
+          label: Text(l.projectsSubmit, style: t.labelLarge?.copyWith(color: c.onPrimary)),
+        ),
       ),
       body: SafeArea(
         child: ListView(

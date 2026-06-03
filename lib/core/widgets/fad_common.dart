@@ -63,13 +63,13 @@ class FadIconButton extends StatelessWidget {
         height: 44,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: c.surface,
-          border: Border.all(color: c.surfaceBorder),
+          color: c.isDark ? Colors.white.withValues(alpha: 0.10) : c.surface,
+          border: Border.all(color: c.isDark ? Colors.white.withValues(alpha: 0.18) : c.surfaceBorder),
         ),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            DuoIcon(icon, size: 22),
+            DuoIcon(icon, size: 22, color: c.textHigh),
             if (badge > 0)
               Positioned(
                 top: 8,
@@ -148,20 +148,20 @@ class FadChip extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: FadRadius.rPill,
           gradient: selected ? c.brandGradient : null,
-          color: selected ? null : c.surface,
+          color: selected ? null : (c.isDark ? Colors.white.withValues(alpha: 0.08) : c.surface),
           border: Border.all(color: selected ? Colors.transparent : c.surfaceBorder),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              DuoIcon(icon!, size: 16, color: selected ? c.onPrimary : null),
+              DuoIcon(icon!, size: 16, color: selected ? c.onPrimary : c.textHigh),
               const SizedBox(width: 6),
             ],
             Text(
               label,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: selected ? c.onPrimary : c.textMid,
+                    color: selected ? c.onPrimary : c.textHigh,
                     fontWeight: FontWeight.w600,
                   ),
             ),

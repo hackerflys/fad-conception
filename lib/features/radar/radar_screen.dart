@@ -31,29 +31,31 @@ class _RadarScreenState extends ConsumerState<RadarScreen> {
     final filters = [l.radarFilterForYou, l.radarFilterRecent, l.radarFilterPopular, l.radarFilterCameroon];
 
     return FadScaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(FadGap.lg, FadGap.sm, FadGap.lg, 0),
-                child: Row(
-                  children: [
-                    const Expanded(child: FadWordmark(compact: true)),
-                    FadIconButton(icon: FadIcons.search, onTap: () => context.push('/search')),
-                    const SizedBox(width: FadGap.xs),
-                    FadIconButton(
-                      icon: FadIcons.messages,
-                      badge: 2,
-                      onTap: () => context.push('/messages'),
-                    ),
-                    const SizedBox(width: FadGap.xs),
-                    FadIconButton(icon: FadIcons.bell, onTap: () {}),
-                  ],
-                ),
-              ),
-            ),
-            SliverPadding(
+      body: CustomScrollView(
+        slivers: [
+          // Collapsing header: hides when you scroll down, snaps back when you
+          // scroll up for quick access to search / messages / notifications.
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            pinned: false,
+            primary: true,
+            backgroundColor: c.bgBase.withValues(alpha: 0.92),
+            surfaceTintColor: Colors.transparent,
+            elevation: 0,
+            toolbarHeight: 60,
+            titleSpacing: FadGap.lg,
+            title: const FadWordmark(compact: true),
+            actions: [
+              FadIconButton(icon: FadIcons.search, onTap: () => context.push('/search')),
+              const SizedBox(width: FadGap.xs),
+              FadIconButton(icon: FadIcons.messages, badge: 2, onTap: () => context.push('/messages')),
+              const SizedBox(width: FadGap.xs),
+              FadIconButton(icon: FadIcons.bell, onTap: () {}),
+              const SizedBox(width: FadGap.lg),
+            ],
+          ),
+          SliverPadding(
               padding: kScreenPadding,
               sliver: SliverList.list(children: [
                 Padding(
@@ -95,7 +97,6 @@ class _RadarScreenState extends ConsumerState<RadarScreen> {
             ),
           ],
         ),
-      ),
     );
   }
 }

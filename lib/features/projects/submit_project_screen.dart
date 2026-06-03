@@ -55,6 +55,31 @@ class SubmitProjectScreen extends StatelessWidget {
             field('Preuve (lien démo / dépôt)', icon: FadIcons.proof),
             field('Contact', icon: FadIcons.messages),
             const SizedBox(height: FadGap.sm),
+            Row(children: [
+              Expanded(
+                child: GlassPanel(
+                  onTap: () {},
+                  padding: const EdgeInsets.symmetric(vertical: FadGap.md),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    DuoIcon(FadIcons.camera, size: 28),
+                    const SizedBox(height: 6),
+                    Text(l.messagePhoto, style: t.labelMedium),
+                  ]),
+                ),
+              ),
+              const SizedBox(width: FadGap.sm),
+              Expanded(
+                child: GlassPanel(
+                  onTap: () {},
+                  padding: const EdgeInsets.symmetric(vertical: FadGap.md),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    DuoIcon(FadIcons.video, size: 28),
+                    const SizedBox(height: 6),
+                    Text(l.messageVideo, style: t.labelMedium),
+                  ]),
+                ),
+              ),
+            ]),
           ],
         ),
       ),
