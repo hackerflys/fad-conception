@@ -31,6 +31,7 @@ class _RadarScreenState extends ConsumerState<RadarScreen> {
     final filters = [l.radarFilterForYou, l.radarFilterRecent, l.radarFilterPopular, l.radarFilterCameroon];
 
     return FadScaffold(
+      topSmoke: false,
       body: CustomScrollView(
         slivers: [
           // Collapsing header: hides when you scroll down, snaps back when you

@@ -66,10 +66,10 @@ class _FadBottomNav extends StatelessWidget {
     final c = context.fad;
     final l = context.l10n;
     final items = [
-      (FadIcons.radar, l.navRadar),
-      (FadIcons.learn, l.navLearn),
-      (FadIcons.projects, l.navProjects),
-      (FadIcons.profile, l.navProfile),
+      (FadIcons.navRadar, l.navRadar),
+      (FadIcons.navLearn, l.navLearn),
+      (FadIcons.navProjects, l.navProjects),
+      (FadIcons.navProfile, l.navProfile),
     ];
 
     return SafeArea(

@@ -26,6 +26,9 @@ dependencies:
   shared_preferences: ^2.3.4
   intl: any
 
+  # Permissions (microphone for voice notes)
+  permission_handler: ^11.3.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

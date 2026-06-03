@@ -19,6 +19,7 @@ class FadScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.intensity = 1,
     this.bottomInsetForNav = false,
+    this.topSmoke = true,
   });
 
   final Widget body;
@@ -27,8 +28,14 @@ class FadScaffold extends StatelessWidget {
   final double intensity;
   final bool bottomInsetForNav;
 
+  /// Soft "smoke" fade at the very top so content dissolves under the status
+  /// bar. Disable on screens that draw their own header smoke (e.g. Radar).
+  final bool topSmoke;
+
   @override
   Widget build(BuildContext context) {
+    final c = context.fad;
+    final topInset = MediaQuery.paddingOf(context).top;
     return AtomBackground(
       intensity: intensity,
       child: Scaffold(
@@ -36,7 +43,30 @@ class FadScaffold extends StatelessWidget {
         extendBodyBehindAppBar: true,
         appBar: appBar,
         floatingActionButton: floatingActionButton,
-        body: body,
+        body: Stack(
+          children: [
+            body,
+            if (topSmoke && appBar == null)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: topInset + 64,
+                child: IgnorePointer(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [c.bgBase, c.bgBase.withValues(alpha: 0)],
+                        stops: const [0.4, 1],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

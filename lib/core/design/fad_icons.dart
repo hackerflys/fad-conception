@@ -4,6 +4,13 @@
 class FadIcons {
   const FadIcons._();
 
+  // Bottom navigation — SOLID (Bold) icons, tinted flat. Duotone reads poorly
+  // at nav size, so these use full-opacity single-colour art.
+  static const String navRadar = 'nav_radar';
+  static const String navLearn = 'nav_learn';
+  static const String navProjects = 'nav_projects';
+  static const String navProfile = 'nav_profile';
+
   // Primary navigation (single duotone art; active state handled by tint)
   static const String radar = 'radar';
   static const String radarFill = 'radar';

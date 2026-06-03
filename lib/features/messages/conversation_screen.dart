@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../core/data/demo_data.dart';
 import '../../core/data/models.dart';
@@ -32,6 +35,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   late List<ChatMessage> _messages;
   bool _composing = false;
   bool _showEmoji = false;
+  bool _recording = false;
+  int _recSecs = 0;
+  Timer? _recTimer;
 
   @override
   void initState() {
@@ -42,9 +48,43 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
   @override
   void dispose() {
+    _recTimer?.cancel();
     _input.dispose();
     _focus.dispose();
     super.dispose();
+  }
+
+  Future<void> _startRecording() async {
+    HapticFeedback.mediumImpact();
+    final status = await Permission.microphone.request();
+    if (!mounted) return;
+    if (!status.isGranted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Permission micro refusée')),
+      );
+      return;
+    }
+    _focus.unfocus();
+    setState(() {
+      _showEmoji = false;
+      _recording = true;
+      _recSecs = 0;
+    });
+    _recTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() => _recSecs++);
+    });
+  }
+
+  void _stopRecording({required bool send}) {
+    _recTimer?.cancel();
+    final secs = _recSecs;
+    setState(() => _recording = false);
+    if (send && secs > 0) {
+      final m = (secs ~/ 60).toString();
+      final s = (secs % 60).toString().padLeft(2, '0');
+      _send(MsgKind.voice, duration: '$m:$s');
+    }
   }
 
   void _send(MsgKind kind, {String text = '', String? duration}) {
@@ -172,22 +212,29 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               },
             ),
           ),
-          _Composer(
-            controller: _input,
-            focus: _focus,
-            composing: _composing,
-            emojiOpen: _showEmoji,
-            onChanged: (v) => setState(() => _composing = v.trim().isNotEmpty),
-            onSendText: () {
-              final txt = _input.text.trim();
-              if (txt.isNotEmpty) _send(MsgKind.text, text: txt);
-            },
-            onVoice: () => _send(MsgKind.voice, duration: '0:08'),
-            onEmoji: _toggleEmoji,
-            onAttach: _openAttach,
-            onTapField: () { if (_showEmoji) setState(() => _showEmoji = false); },
-          ),
-          if (_showEmoji) _EmojiPanel(onPick: _insertEmoji),
+          if (_recording)
+            _RecordingBar(
+              seconds: _recSecs,
+              onCancel: () => _stopRecording(send: false),
+              onSend: () => _stopRecording(send: true),
+            )
+          else
+            _Composer(
+              controller: _input,
+              focus: _focus,
+              composing: _composing,
+              emojiOpen: _showEmoji,
+              onChanged: (v) => setState(() => _composing = v.trim().isNotEmpty),
+              onSendText: () {
+                final txt = _input.text.trim();
+                if (txt.isNotEmpty) _send(MsgKind.text, text: txt);
+              },
+              onVoice: _startRecording,
+              onEmoji: _toggleEmoji,
+              onAttach: _openAttach,
+              onTapField: () { if (_showEmoji) setState(() => _showEmoji = false); },
+            ),
+          if (_showEmoji && !_recording) _EmojiPanel(onPick: _insertEmoji),
         ]),
       ),
     );
@@ -424,6 +471,62 @@ class _Composer extends StatelessWidget {
               boxShadow: [BoxShadow(color: c.glow, blurRadius: 16, spreadRadius: -5)],
             ),
             child: DuoIcon(composing ? FadIcons.send : FadIcons.mic, size: 21, color: c.onPrimary),
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
+class _RecordingBar extends StatelessWidget {
+  const _RecordingBar({required this.seconds, required this.onCancel, required this.onSend});
+  final int seconds;
+  final VoidCallback onCancel;
+  final VoidCallback onSend;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.fad;
+    final t = Theme.of(context).textTheme;
+    final m = (seconds ~/ 60).toString();
+    final s = (seconds % 60).toString().padLeft(2, '0');
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(FadGap.lg, 0, FadGap.lg, FadGap.sm),
+      child: Row(children: [
+        Expanded(
+          child: Container(
+            height: 46,
+            padding: const EdgeInsets.symmetric(horizontal: FadGap.md),
+            decoration: BoxDecoration(
+              borderRadius: FadRadius.rPill,
+              color: c.isDark ? Colors.white.withValues(alpha: 0.06) : c.surface,
+              border: Border.all(color: c.danger.withValues(alpha: 0.5)),
+            ),
+            child: Row(children: [
+              Container(width: 11, height: 11, decoration: BoxDecoration(color: c.danger, shape: BoxShape.circle)),
+              const SizedBox(width: FadGap.sm),
+              Text('$m:$s', style: t.titleMedium?.copyWith(color: c.textHigh)),
+              const SizedBox(width: FadGap.sm),
+              Expanded(child: _Waveform(color: c.danger)),
+              GestureDetector(
+                onTap: () { HapticFeedback.selectionClick(); onCancel(); },
+                child: DuoIcon(FadIcons.close, size: 22, color: c.textMid),
+              ),
+            ]),
+          ),
+        ),
+        const SizedBox(width: FadGap.xs),
+        GestureDetector(
+          onTap: () { HapticFeedback.lightImpact(); onSend(); },
+          child: Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: c.brandGradient,
+              boxShadow: [BoxShadow(color: c.glow, blurRadius: 16, spreadRadius: -5)],
+            ),
+            child: DuoIcon(FadIcons.send, size: 21, color: c.onPrimary),
           ),
         ),
       ]),
