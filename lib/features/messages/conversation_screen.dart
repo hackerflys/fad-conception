@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -69,7 +70,15 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   bool _recPaused = false;
   int _recSecs = 0;
   Timer? _recTimer;
-  final Set<String> _playing = {};
+  ChatMessage? _replyingTo;
+
+  void _replyTo(ChatMessage msg) {
+    HapticFeedback.selectionClick();
+    setState(() => _replyingTo = msg);
+    _focus.requestFocus();
+  }
+
+  void _cancelReply() => setState(() => _replyingTo = null);
 
   @override
   void initState() {
@@ -104,6 +113,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       ));
       if (kind == MsgKind.text) _input.clear();
       _composing = false;
+      _replyingTo = null;
     });
     // Simulate delivery then read receipts.
     final id = _messages.last.id;
@@ -218,6 +228,31 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     });
   }
 
+  Future<void> _pickCustomReaction(ChatMessage msg) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) {
+        return SizedBox(
+          height: 320,
+          child: GridView.count(
+            crossAxisCount: 8,
+            padding: const EdgeInsets.all(FadGap.sm),
+            children: [
+              for (final list in _emojiCats.values)
+                for (final e in list)
+                  InkWell(
+                    borderRadius: FadRadius.rSm,
+                    onTap: () { Navigator.pop(ctx); _setReaction(msg, e.e); },
+                    child: Center(child: Text(e.e, style: const TextStyle(fontSize: 24))),
+                  ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _deleteMsg(ChatMessage msg) {
     HapticFeedback.mediumImpact();
     setState(() => _messages.removeWhere((m) => m.id == msg.id));
@@ -267,11 +302,19 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         child: Text(r, style: const TextStyle(fontSize: 26)),
                       ),
                     ),
+                  GestureDetector(
+                    onTap: () { Navigator.pop(ctx); _pickCustomReaction(msg); },
+                    child: Container(
+                      width: 42, height: 42,
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: c.surface, border: Border.all(color: c.surfaceBorder)),
+                      child: DuoIcon(FadIcons.plus, size: 20, color: c.textHigh),
+                    ),
+                  ),
                 ],
               ),
             ),
             const Divider(height: 1),
-            opt(FadIcons.reply, 'Répondre', () => snack('Répondre')),
+            opt(FadIcons.reply, 'Répondre', () => _replyTo(msg)),
             if (msg.fromMe && msg.kind == MsgKind.text) opt(FadIcons.edit, 'Modifier', () => _editMsg(msg)),
             opt(FadIcons.forwardMsg, 'Transférer', () => snack('Transféré')),
             opt(FadIcons.archive, 'Archiver', () => snack('Archivé')),
@@ -281,11 +324,6 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         );
       },
     );
-  }
-
-  void _togglePlay(ChatMessage msg) {
-    HapticFeedback.selectionClick();
-    setState(() => _playing.contains(msg.id) ? _playing.remove(msg.id) : _playing.add(msg.id));
   }
 
   @override
@@ -341,14 +379,15 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                   return _Bubble(
                     msg: msg,
                     tail: tail,
-                    playing: _playing.contains(msg.id),
-                    onPlay: () => _togglePlay(msg),
                     onLongPress: () => _openMessageOptions(msg),
+                    onSwipeReply: () => _replyTo(msg),
                   );
                 },
               ),
             ),
           ),
+          if (_replyingTo != null && !_recording)
+            _ReplyPreview(msg: _replyingTo!, onCancel: _cancelReply),
           if (_recording)
             _RecordingBar(
               seconds: _recSecs,
@@ -406,15 +445,13 @@ class _Bubble extends StatelessWidget {
   const _Bubble({
     required this.msg,
     required this.tail,
-    required this.playing,
-    required this.onPlay,
     required this.onLongPress,
+    required this.onSwipeReply,
   });
   final ChatMessage msg;
   final bool tail;
-  final bool playing;
-  final VoidCallback onPlay;
   final VoidCallback onLongPress;
+  final VoidCallback onSwipeReply;
 
   @override
   Widget build(BuildContext context) {
@@ -437,23 +474,12 @@ class _Bubble extends StatelessWidget {
       case MsgKind.text:
         content = Text(msg.text, style: t.bodyLarge?.copyWith(color: onBubble));
       case MsgKind.voice:
-        content = Row(mainAxisSize: MainAxisSize.min, children: [
-          GestureDetector(
-            onTap: onPlay,
-            child: Container(
-              width: 34, height: 34,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: voiceColor.withValues(alpha: me ? 0.22 : 0.16),
-              ),
-              child: DuoIcon(playing ? FadIcons.pause : FadIcons.playFill, size: 18, color: voiceColor),
-            ),
-          ),
-          const SizedBox(width: 8),
-          _Waveform(color: voiceColor),
-          const SizedBox(width: 8),
-          Text(msg.durationLabel ?? '', style: t.labelSmall?.copyWith(color: me ? c.onPrimary : c.textMid)),
-        ]);
+        content = _VoicePlayer(
+          duration: msg.durationLabel ?? '0:05',
+          color: voiceColor,
+          mutedColor: (me ? c.onPrimary : c.textMid).withValues(alpha: 0.35),
+          timeColor: me ? c.onPrimary : c.textMid,
+        );
       case MsgKind.photo:
         content = Row(mainAxisSize: MainAxisSize.min, children: [
           DuoIcon(FadIcons.gallery, size: 20, color: me ? c.onPrimary : c.accent),
@@ -500,7 +526,8 @@ class _Bubble extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11,
                     height: 1,
-                    color: msg.status == MsgStatus.read ? c.accent : c.onPrimary.withValues(alpha: 0.75),
+                    // White when read, faint otherwise.
+                    color: msg.status == MsgStatus.read ? Colors.white : c.onPrimary.withValues(alpha: 0.55),
                   ),
                 ),
               ],
@@ -510,7 +537,22 @@ class _Bubble extends StatelessWidget {
       ),
     );
 
-    return Align(
+    return Dismissible(
+      key: ValueKey('rep_${msg.id}'),
+      direction: DismissDirection.startToEnd,
+      dismissThresholds: const {DismissDirection.startToEnd: 0.22},
+      confirmDismiss: (_) async {
+        onSwipeReply();
+        return false;
+      },
+      background: Padding(
+        padding: const EdgeInsets.only(left: FadGap.xl),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: DuoIcon(FadIcons.reply, size: 24, color: c.accent),
+        ),
+      ),
+      child: Align(
       alignment: me ? Alignment.centerRight : Alignment.centerLeft,
       child: Stack(
         clipBehavior: Clip.none,
@@ -533,33 +575,217 @@ class _Bubble extends StatelessWidget {
             ),
         ],
       ),
+      ),
     );
   }
 }
 
-class _Waveform extends StatelessWidget {
-  const _Waveform({required this.color});
+/// Animated voice note: play/pause, the played bars light up and a pointer
+/// advances over the waveform during playback.
+class _VoicePlayer extends StatefulWidget {
+  const _VoicePlayer({
+    required this.duration,
+    required this.color,
+    required this.mutedColor,
+    required this.timeColor,
+  });
+  final String duration;
   final Color color;
+  final Color mutedColor;
+  final Color timeColor;
+
+  @override
+  State<_VoicePlayer> createState() => _VoicePlayerState();
+}
+
+class _VoicePlayerState extends State<_VoicePlayer> with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  bool _playing = false;
+
+  static const _bars = [
+    0.35, 0.6, 0.45, 0.8, 0.5, 1.0, 0.4, 0.7, 0.55, 0.9, 0.45,
+    0.65, 0.5, 0.85, 0.4, 0.7, 0.6, 0.95, 0.5, 0.75, 0.4, 0.6, 0.45, 0.7,
+  ];
+
+  int get _secs {
+    final p = widget.duration.split(':');
+    if (p.length == 2) {
+      return (int.tryParse(p[0]) ?? 0) * 60 + (int.tryParse(p[1]) ?? 5);
+    }
+    return 5;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: Duration(seconds: _secs.clamp(2, 30)))
+      ..addListener(() => setState(() {}))
+      ..addStatusListener((s) {
+        if (s == AnimationStatus.completed) {
+          setState(() => _playing = false);
+          _ctrl.reset();
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  void _toggle() {
+    HapticFeedback.selectionClick();
+    setState(() {
+      if (_playing) {
+        _ctrl.stop();
+        _playing = false;
+      } else {
+        _ctrl.forward(from: _ctrl.isCompleted ? 0 : _ctrl.value);
+        _playing = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    const bars = [6.0, 12.0, 8.0, 16.0, 10.0, 18.0, 9.0, 14.0, 7.0, 12.0, 6.0];
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (final h in bars)
-          Container(
-            width: 3,
-            height: h,
-            margin: const EdgeInsets.symmetric(horizontal: 1.2),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.85),
-              borderRadius: const BorderRadius.all(Radius.circular(2)),
-            ),
+    final progress = _ctrl.value;
+    final t = Theme.of(context).textTheme;
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      GestureDetector(
+        onTap: _toggle,
+        child: Container(
+          width: 30, height: 30,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: widget.color.withValues(alpha: 0.18)),
+          child: Center(child: DuoIcon(_playing ? FadIcons.pause : FadIcons.playFill, size: 14, color: widget.color)),
+        ),
+      ),
+      const SizedBox(width: 8),
+      SizedBox(
+        width: 132,
+        height: 26,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            for (var i = 0; i < _bars.length; i++)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0.7),
+                  child: Container(
+                    height: 4 + _bars[i] * 18,
+                    decoration: BoxDecoration(
+                      color: (i / _bars.length) <= progress ? widget.color : widget.mutedColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(2)),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+      const SizedBox(width: 8),
+      Text(widget.duration, style: t.labelSmall?.copyWith(color: widget.timeColor)),
+    ]);
+  }
+}
+
+class _ReplyPreview extends StatelessWidget {
+  const _ReplyPreview({required this.msg, required this.onCancel});
+  final ChatMessage msg;
+  final VoidCallback onCancel;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.fad;
+    final t = Theme.of(context).textTheme;
+    final preview = switch (msg.kind) {
+      MsgKind.text => msg.text,
+      MsgKind.voice => '🎤 Note vocale',
+      MsgKind.photo => '🖼️ ${msg.text.isEmpty ? "Photo" : msg.text}',
+      MsgKind.video => '🎬 Vidéo',
+    };
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(FadGap.lg, 0, FadGap.lg, FadGap.xs),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: FadGap.sm, vertical: FadGap.xs),
+        decoration: BoxDecoration(
+          borderRadius: FadRadius.rMd,
+          color: c.isDark ? Colors.white.withValues(alpha: 0.05) : c.surface,
+          border: Border.all(color: c.surfaceBorder),
+        ),
+        child: Row(children: [
+          Container(width: 3, height: 34, decoration: BoxDecoration(color: c.accent, borderRadius: FadRadius.rPill)),
+          const SizedBox(width: FadGap.sm),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+              Text(msg.fromMe ? 'Vous' : 'Réponse', style: t.labelSmall?.copyWith(color: c.accent)),
+              Text(preview, maxLines: 1, overflow: TextOverflow.ellipsis, style: t.bodySmall?.copyWith(color: c.textMid)),
+            ]),
           ),
-      ],
+          GestureDetector(onTap: onCancel, child: DuoIcon(FadIcons.close, size: 20, color: c.textMid)),
+        ]),
+      ),
     );
   }
+}
+
+/// Live recording meter: bars pulse with pseudo-random "levels", full width.
+class _LiveWaveform extends StatefulWidget {
+  const _LiveWaveform({required this.active, required this.color});
+  final bool active;
+  final Color color;
+
+  @override
+  State<_LiveWaveform> createState() => _LiveWaveformState();
+}
+
+class _LiveWaveformState extends State<_LiveWaveform> with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat();
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (_, __) => CustomPaint(
+        painter: _LivePainter(_ctrl.value, widget.color, widget.active),
+        size: const Size(double.infinity, 28),
+      ),
+    );
+  }
+}
+
+class _LivePainter extends CustomPainter {
+  _LivePainter(this.phase, this.color, this.active);
+  final double phase;
+  final Color color;
+  final bool active;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const barW = 3.0, gap = 3.0;
+    final n = (size.width / (barW + gap)).floor();
+    final paint = Paint()..color = color..strokeCap = StrokeCap.round..strokeWidth = barW;
+    for (var i = 0; i < n; i++) {
+      // Pseudo-random amplitude varying over time; near-flat when not active.
+      final seed = (i * 12.9898 + 4.0);
+      final v = active
+          ? (0.2 + 0.8 * (0.5 + 0.5 * math.sin(seed + phase * 6.283 * 2 + i * 0.6)).abs())
+          : 0.12;
+      final h = (size.height * v).clamp(3.0, size.height);
+      final x = i * (barW + gap) + barW / 2;
+      canvas.drawLine(Offset(x, (size.height - h) / 2), Offset(x, (size.height + h) / 2), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _LivePainter old) => old.phase != phase || old.active != active;
 }
 
 class _EmojiPanel extends StatefulWidget {
@@ -714,7 +940,8 @@ class _RecordingBar extends StatelessWidget {
               const SizedBox(width: FadGap.sm),
               Text('$m:$s', style: t.titleMedium?.copyWith(color: c.textHigh)),
               const SizedBox(width: FadGap.sm),
-              Expanded(child: _Waveform(color: paused ? c.textMid : c.danger)),
+              Expanded(child: _LiveWaveform(active: !paused, color: paused ? c.textMid : c.danger)),
+              const SizedBox(width: FadGap.sm),
               GestureDetector(
                 onTap: onPauseToggle,
                 child: DuoIcon(paused ? FadIcons.playFill : FadIcons.pause, size: 24, color: c.accent),
