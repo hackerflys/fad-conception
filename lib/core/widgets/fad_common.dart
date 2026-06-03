@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../design/fad_colors.dart';
 import '../design/fad_icons.dart';
 import '../design/fad_tokens.dart';
 import 'atom_background.dart';
 import 'duo_icon.dart';
+
+VoidCallback? _haptic(VoidCallback? cb) =>
+    cb == null ? null : () { HapticFeedback.selectionClick(); cb(); };
 
 /// Immersive scaffold: atom backdrop behind a transparent Scaffold.
 class FadScaffold extends StatelessWidget {
@@ -57,7 +61,7 @@ class FadIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.fad;
     final btn = GestureDetector(
-      onTap: onTap,
+      onTap: _haptic(onTap),
       child: Container(
         width: 44,
         height: 44,
@@ -141,7 +145,7 @@ class FadChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.fad;
     return GestureDetector(
-      onTap: onTap,
+      onTap: _haptic(onTap),
       child: AnimatedContainer(
         duration: FadMotion.fast,
         padding: const EdgeInsets.symmetric(horizontal: FadGap.md, vertical: FadGap.xs + 2),

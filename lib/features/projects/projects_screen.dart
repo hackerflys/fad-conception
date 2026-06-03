@@ -24,7 +24,7 @@ class ProjectsScreen extends ConsumerWidget {
 
     return FadScaffold(
       floatingActionButton: Transform.translate(
-        offset: const Offset(0, -68),
+        offset: const Offset(0, -96),
         child: FloatingActionButton.extended(
           onPressed: () => context.push('/projects/submit'),
           backgroundColor: c.primary,

@@ -17,6 +17,7 @@ const _signals = <Signal>[
     localScore: 92,
     savedCount: 248,
     commentCount: 31,
+    likeCount: 530,
     linkedLessonId: 'l1',
   ),
   Signal(
@@ -29,6 +30,7 @@ const _signals = <Signal>[
     localScore: 78,
     savedCount: 132,
     commentCount: 12,
+    likeCount: 312,
     linkedLessonId: 'l2',
   ),
   Signal(
@@ -41,6 +43,7 @@ const _signals = <Signal>[
     localScore: 85,
     savedCount: 176,
     commentCount: 24,
+    likeCount: 410,
   ),
   Signal(
     id: 's4',
@@ -52,6 +55,7 @@ const _signals = <Signal>[
     localScore: 88,
     savedCount: 201,
     commentCount: 18,
+    likeCount: 487,
     linkedLessonId: 'l1',
   ),
 ];

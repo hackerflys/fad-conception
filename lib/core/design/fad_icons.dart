@@ -47,12 +47,18 @@ class FadIcons {
   static const String play = 'play';
   static const String test = 'test';
 
+  // Engagement
+  static const String like = 'like';
+
   // Messaging composer
-  static const String mic = 'mic';
+  static const String mic = 'mic2';
   static const String camera = 'camera';
   static const String video = 'video';
   static const String send = 'send';
   static const String attach = 'attach';
+  static const String emoji = 'emoji';
+  static const String gallery = 'gallery';
+  static const String file = 'file';
 
   // Settings / profile
   static const String gear = 'gear';

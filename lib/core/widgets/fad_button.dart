@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../design/fad_colors.dart';
 import '../design/fad_tokens.dart';
@@ -96,7 +97,12 @@ class FadButton extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: disabled ? null : onPressed,
+            onTap: disabled
+                ? null
+                : () {
+                    HapticFeedback.lightImpact();
+                    onPressed!();
+                  },
             borderRadius: FadRadius.rPill,
             child: Ink(
               decoration: deco,

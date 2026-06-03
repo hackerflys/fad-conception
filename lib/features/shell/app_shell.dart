@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/design/fad_colors.dart';
@@ -129,14 +130,17 @@ class _NavItem extends StatelessWidget {
     final iconColor = selected ? c.onPrimary : (c.isDark ? c.textMid : c.textLow);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: onTap,
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
       child: AnimatedContainer(
         duration: FadMotion.base,
         curve: FadMotion.curve,
         margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 7),
         decoration: BoxDecoration(
           borderRadius: FadRadius.rPill,
-          gradient: selected ? c.brandGradient : null,
+          color: selected ? c.primary : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -40,9 +40,19 @@ class _RadarScreenState extends ConsumerState<RadarScreen> {
             snap: true,
             pinned: false,
             primary: true,
-            backgroundColor: c.bgBase.withValues(alpha: 0.92),
+            backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             elevation: 0,
+            flexibleSpace: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [c.bgBase, c.bgBase.withValues(alpha: 0)],
+                  stops: const [0.45, 1],
+                ),
+              ),
+            ),
             toolbarHeight: 60,
             titleSpacing: FadGap.lg,
             title: const FadWordmark(compact: true),
@@ -72,17 +82,22 @@ class _RadarScreenState extends ConsumerState<RadarScreen> {
               ]),
             ),
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: 44,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: FadGap.lg, vertical: FadGap.xs),
-                  itemCount: filters.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: FadGap.xs),
-                  itemBuilder: (_, i) => FadChip(
-                    label: filters[i],
-                    selected: _filter == i,
-                    onTap: () => setState(() => _filter = i),
+              child: Padding(
+                padding: const EdgeInsets.only(top: FadGap.md),
+                child: SizedBox(
+                  height: 50,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: FadGap.lg),
+                    itemCount: filters.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: FadGap.xs),
+                    itemBuilder: (_, i) => Center(
+                      child: FadChip(
+                        label: filters[i],
+                        selected: _filter == i,
+                        onTap: () => setState(() => _filter = i),
+                      ),
+                    ),
                   ),
                 ),
               ),

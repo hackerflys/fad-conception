@@ -38,6 +38,7 @@ class Signal {
     required this.localScore,
     required this.savedCount,
     required this.commentCount,
+    this.likeCount = 0,
     this.verified = true,
     this.aiAssisted = true,
     this.humanReviewed = true,
@@ -53,6 +54,7 @@ class Signal {
   final int localScore; // 0..100
   final int savedCount;
   final int commentCount;
+  final int likeCount;
   final bool verified;
   final bool aiAssisted;
   final bool humanReviewed;

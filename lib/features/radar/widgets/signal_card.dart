@@ -58,13 +58,17 @@ class SignalCard extends StatelessWidget {
           const SizedBox(height: FadGap.sm),
           Row(
             children: [
-              DuoIcon(FadIcons.bookmark, size: 16, color: c.textLow),
+              DuoIcon(FadIcons.like, size: 16, color: c.danger),
               const SizedBox(width: 4),
-              Text('${signal.savedCount}', style: t.labelSmall),
+              Text('${signal.likeCount}', style: t.labelSmall),
               const SizedBox(width: FadGap.md),
               DuoIcon(FadIcons.comment, size: 16, color: c.textLow),
               const SizedBox(width: 4),
               Text('${signal.commentCount}', style: t.labelSmall),
+              const SizedBox(width: FadGap.md),
+              DuoIcon(FadIcons.bookmark, size: 16, color: c.textLow),
+              const SizedBox(width: 4),
+              Text('${signal.savedCount}', style: t.labelSmall),
               const Spacer(),
               if (signal.verified)
                 DuoIcon(FadIcons.proof, size: 18, color: c.accent),
